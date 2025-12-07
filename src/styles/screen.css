@@ -9,6 +9,17 @@
   padding: 4cqw;
 }
 
+.timer-controls button {
+  border: 1px solid var(--screen-fg);
+  border-radius: 0;
+  background: var(--screen-bg);
+  color: var(--screen-fg);
+}
+
+.timer-controls button {
+  line-height: 1.1;
+}
+
 .boot-screen {
   border: 0;
   background: var(--screen-bg);
@@ -22,35 +33,62 @@
 .smile-face {
   width: 26cqw;
   height: 26cqw;
-  image-rendering: pixelated;
 }
 
 .timer-screen {
-  gap: 1.5cqw;
+  position: relative;
+  padding: 3cqw;
 }
 
-.timer-screen h1,
 .timer-screen p {
   margin: 0;
   font-weight: 400;
 }
 
-.timer-screen h1 {
-  font-size: 5cqw;
-}
-
-.timer-screen h1:focus-visible {
-  outline: 2px dashed var(--screen-fg);
-  outline-offset: 1cqw;
-}
-
 .timer-digits {
-  font-size: 13cqw;
+  font-size: 20cqw;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  transform: translateY(-2cqw);
 }
 
 .timer-status {
-  font-size: 3.5cqw;
+  position: absolute;
+  bottom: 0;
+  left: 3cqw;
+  right: 3cqw;
+  font-size: 4cqw;
+  line-height: 1;
   text-align: center;
+  min-height: 1em;
+}
+
+.timer-controls {
+  position: absolute;
+  bottom: 4cqw;
+  display: flex;
+  gap: 1.5cqw;
+}
+
+.timer-controls button {
+  min-width: 11cqw;
+  padding: 0.5cqw 1cqw;
+  font-size: 4.8cqw;
+}
+
+.timer-controls button:focus-visible {
+  outline: 2px dashed var(--screen-fg);
+  outline-offset: 0.5cqw;
+}
+
+.timer-controls button:active {
+  color: var(--screen-bg);
+  background: var(--screen-fg);
+}
+
+@media (hover: hover) {.timer-controls button:hover {
+    color: var(--screen-bg);
+    background: var(--screen-fg);
+  }
+
 }

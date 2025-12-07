@@ -11,11 +11,14 @@
   user-select: none;
 }
 
+.macintosh img {
+  image-rendering: pixelated;
+}
+
 .macintosh-body {
   display: block;
   width: 100%;
   height: auto;
-  image-rendering: pixelated;
   pointer-events: none;
 }
 

@@ -2,6 +2,8 @@ import macBodyUrl from "./assets/mac-body.png";
 import smileFaceUrl from "./assets/smile-face.svg";
 import type { AppState } from "./state";
 
+const buttonLabels = { idle: "Start", running: "Pause", paused: "Resume" };
+
 export function createMacintoshShell(root: HTMLElement): HTMLElement {
   const macintosh = document.createElement("div");
   macintosh.className = "macintosh";
@@ -23,47 +25,71 @@ export function createMacintoshShell(root: HTMLElement): HTMLElement {
   return screen;
 }
 
-export function renderScreen(
+export function renderBootScreen(
   screen: HTMLElement,
-  state: AppState,
   openTimer: () => void,
 ): void {
-  if (state.screen === "boot") {
-    const bootButton = document.createElement("button");
-    bootButton.className = "boot-screen";
-    bootButton.type = "button";
-    bootButton.setAttribute("aria-label", "Open Pomodoro timer");
+  const bootButton = document.createElement("button");
+  bootButton.className = "boot-screen";
+  bootButton.type = "button";
+  bootButton.setAttribute("aria-label", "Open Pomodoro timer");
 
-    const smile = document.createElement("img");
-    smile.className = "smile-face";
-    smile.src = smileFaceUrl;
-    smile.alt = "Happy Mac face";
-    smile.width = 32;
-    smile.height = 32;
-    smile.draggable = false;
+  const smile = document.createElement("img");
+  smile.className = "smile-face";
+  smile.src = smileFaceUrl;
+  smile.alt = "Happy Mac face";
+  smile.width = 32;
+  smile.height = 32;
+  smile.draggable = false;
 
-    bootButton.append(smile);
-    bootButton.addEventListener("click", openTimer);
-    screen.replaceChildren(bootButton);
-    return;
-  }
+  bootButton.append(smile);
+  bootButton.addEventListener("click", openTimer);
+  screen.replaceChildren(bootButton);
+}
 
+export function renderTimerScreen(
+  screen: HTMLElement,
+  actions: {
+    toggleTimer: () => void;
+    resetTimer: () => void;
+    skipTimer: () => void;
+  },
+): (state: AppState, remainingMs: number) => void {
   const timerScreen = document.createElement("div");
   timerScreen.className = "timer-screen";
 
-  const mode = document.createElement("h1");
-  mode.textContent = "Focus";
-  mode.tabIndex = -1;
-
-  const time = document.createElement("p");
+  const time = document.createElement("div");
   time.className = "timer-digits";
-  time.textContent = "25:00";
-  time.setAttribute("aria-label", "25 minutes");
+  time.setAttribute("role", "timer");
+  time.setAttribute("aria-live", "off");
 
   const status = document.createElement("p");
   status.className = "timer-status";
-  status.textContent = "ready for a focus session";
+  status.setAttribute("role", "status");
 
-  timerScreen.append(mode, time, status);
+  const controls = document.createElement("div");
+  controls.className = "timer-controls";
+  const toggle = document.createElement("button");
+  const reset = document.createElement("button");
+  const skip = document.createElement("button");
+  toggle.type = reset.type = skip.type = "button";
+  reset.textContent = "Reset";
+  skip.textContent = "Skip";
+  toggle.addEventListener("click", actions.toggleTimer);
+  reset.addEventListener("click", actions.resetTimer);
+  skip.addEventListener("click", actions.skipTimer);
+  controls.append(toggle, reset, skip);
+
+  timerScreen.append(time, controls, status);
   screen.replaceChildren(timerScreen);
+
+  return (state, remainingMs) => {
+    const name = state.timer.mode === "focus" ? "Focus" : "Break";
+    time.setAttribute("aria-label", `${name} timer`);
+    const seconds = Math.ceil(remainingMs / 1000);
+    time.textContent = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+    toggle.textContent = buttonLabels[state.timer.status];
+    const message = state.timer.status === "paused" ? "Paused" : "";
+    if (status.textContent !== message) status.textContent = message;
+  };
 }
