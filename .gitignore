@@ -5,6 +5,9 @@ src-tauri/target/
 src-tauri/gen/schemas/
 *.tsbuildinfo
 
+# Local tests
+/tests/
+
 # Local environment files
 .env
 .env.*
@@ -20,5 +23,5 @@ src-tauri/gen/schemas/
 Thumbs.db
 Desktop.ini
 
-# Temporarily excluded documentation
-/README.md
+# Local agent instructions
+/AGENTS.md
