@@ -15,4 +15,5 @@ export interface AppState {
   screen: AppScreen;
   timer: TimerState;
   completedMode: TimerMode | null;
+  completedFocusSessions: number;
 }

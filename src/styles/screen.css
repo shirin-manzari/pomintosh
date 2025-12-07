@@ -114,3 +114,27 @@
   outline: 2px dashed var(--screen-fg);
   outline-offset: -3cqw;
 }
+
+.session-hearts {
+  position: absolute;
+  top: 2.5cqw;
+  left: 4cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.75cqw;
+  font-size: 4.5cqw;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.session-hearts img {
+  width: 4cqw;
+  height: auto;
+}
+
+.session-hearts span {
+  display: block;
+  line-height: 1;
+  transform: translateY(0.15cqw);
+  font-variant-numeric: tabular-nums;
+}

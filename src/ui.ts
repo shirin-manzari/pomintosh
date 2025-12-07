@@ -1,8 +1,33 @@
 import macBodyUrl from "./assets/mac-body.png";
 import smileFaceUrl from "./assets/smile-face.svg";
+import heartUrl from "./assets/heart.svg";
 import type { AppState, TimerMode } from "./state";
 
 const buttonLabels = { idle: "Start", running: "Pause", paused: "Resume" };
+
+export function renderSessionHearts(screen: HTMLElement, count: number): void {
+  if (count === 0) return;
+
+  const hearts = document.createElement("div");
+  hearts.className = "session-hearts";
+  hearts.setAttribute("role", "img");
+  hearts.setAttribute("aria-label", `${count} completed focus ${count === 1 ? "session" : "sessions"}`);
+
+  const heart = document.createElement("img");
+  heart.src = heartUrl;
+  heart.alt = "";
+  heart.width = 9;
+  heart.height = 8;
+  heart.draggable = false;
+  hearts.append(heart);
+
+  if (count > 1) {
+    const extra = document.createElement("span");
+    extra.textContent = String(count);
+    hearts.append(extra);
+  }
+  screen.append(hearts);
+}
 
 export function createMacintoshShell(root: HTMLElement): HTMLElement {
   const macintosh = document.createElement("div");

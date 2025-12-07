@@ -13,6 +13,7 @@ import {
   createMacintoshShell,
   renderBootScreen,
   renderFinishedScreen,
+  renderSessionHearts,
   renderTimerScreen,
 } from "./ui";
 
@@ -21,6 +22,7 @@ export function initializeApp(root: HTMLElement): void {
     screen: "boot",
     timer: createTimerState(),
     completedMode: null,
+    completedFocusSessions: 0,
   };
   const screen = createMacintoshShell(root);
   const completionSound = createCompletionSound();
@@ -30,10 +32,12 @@ export function initializeApp(root: HTMLElement): void {
     if (state.screen !== "timer") return false;
     const mode = state.timer.mode;
     if (completeSession(state.timer, now)) {
+      if (mode === "focus") state.completedFocusSessions += 1;
       state.completedMode = mode;
       state.screen = "finished";
       updateTimerView = null;
       renderFinishedScreen(screen, state.completedMode, acknowledgeCompletion);
+      renderSessionHearts(screen, state.completedFocusSessions);
       void completionSound.play();
       return true;
     }
@@ -84,6 +88,7 @@ export function initializeApp(root: HTMLElement): void {
       resetTimer: resetCurrentTimer,
       skipTimer: skipCurrentTimer,
     });
+    renderSessionHearts(screen, state.completedFocusSessions);
     refreshTimer();
     screen.querySelector<HTMLButtonElement>(".timer-controls button")?.focus();
   }
