@@ -10,6 +10,57 @@
   padding: 4cqw;
 }
 
+.settings-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.5cqw;
+  padding: 1.5cqw 4cqw;
+}
+
+.settings-screen h1,
+.settings-note {
+  margin: 0;
+  text-align: center;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.settings-screen h1 {
+  margin-bottom: 0.5cqw;
+  font-size: 7.5cqw;
+  text-align: left;
+}
+
+.settings-note {
+  font-size: 3.8cqw;
+}
+
+.duration-row {
+  display: grid;
+  grid-template-columns: 12cqw 14cqw 14cqw;
+  align-items: center;
+  gap: 1cqw;
+  font-size: 5cqw;
+}
+
+.settings-note + .duration-row {
+  margin-top: 1cqw;
+}
+
+.duration-row input,
+.duration-row select,
+.settings-controls button {
+  min-width: 0;
+  height: 6.5cqw;
+  padding: 0 0.5cqw;
+}
+
+.duration-row input,
+.duration-row select,
+.settings-controls button,
 .timer-controls button {
   border: 1px solid var(--screen-fg);
   border-radius: 0;
@@ -17,8 +68,50 @@
   color: var(--screen-fg);
 }
 
+.duration-row input,
+.duration-row select {
+  width: 100%;
+  font: inherit;
+}
+
+.settings-controls {
+  display: grid;
+  grid-template-columns: 14cqw 14cqw;
+  gap: 1cqw;
+  margin-left: 13cqw;
+}
+
+.settings-controls button {
+  font-size: 5cqw;
+}
+
+.settings-controls button,
 .timer-controls button {
   line-height: 1.1;
+}
+
+.settings-button {
+  position: absolute;
+  top: 1.5cqw;
+  right: 3cqw;
+  display: grid;
+  place-items: center;
+  width: 5cqw;
+  height: 5cqw;
+  padding: 0.5cqw;
+  border: 0;
+  background: transparent;
+}
+
+.settings-button img {
+  width: 100%;
+  height: 100%;
+}
+
+.settings-button:focus-visible,
+.settings-screen :focus-visible {
+  outline: 2px dashed var(--screen-fg);
+  outline-offset: 0.3cqw;
 }
 
 .boot-screen {
@@ -82,14 +175,24 @@
   outline-offset: 0.5cqw;
 }
 
-.timer-controls button:active {
+.timer-controls button:active,
+.settings-controls button:active {
   color: var(--screen-bg);
   background: var(--screen-fg);
 }
 
-@media (hover: hover) {.timer-controls button:hover {
+@media (hover: hover) {.timer-controls button:hover,
+.settings-controls button:hover {
     color: var(--screen-bg);
     background: var(--screen-fg);
+  }
+
+.settings-button:hover {
+    background: var(--screen-fg);
+  }
+
+.settings-button:hover img {
+    filter: invert(1);
   }
 
 }

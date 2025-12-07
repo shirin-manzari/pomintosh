@@ -1,4 +1,4 @@
-export type AppScreen = "boot" | "timer" | "finished";
+export type AppScreen = "boot" | "timer" | "finished" | "settings";
 export type TimerMode = "focus" | "break";
 export type TimerStatus = "idle" | "running" | "paused";
 export type DurationSettings = Record<TimerMode, number>;

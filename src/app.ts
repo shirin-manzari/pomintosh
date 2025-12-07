@@ -1,4 +1,5 @@
-import type { AppState } from "./state";
+import type { AppState, DurationSettings } from "./state";
+import { loadSettings, saveSettings } from "./storage";
 import { createCompletionSound } from "./audio";
 import {
   completeSession,
@@ -14,13 +15,14 @@ import {
   renderBootScreen,
   renderFinishedScreen,
   renderSessionHearts,
+  renderSettingsScreen,
   renderTimerScreen,
 } from "./ui";
 
 export function initializeApp(root: HTMLElement): void {
   const state: AppState = {
     screen: "boot",
-    timer: createTimerState(),
+    timer: createTimerState(loadSettings()),
     completedMode: null,
     completedFocusSessions: 0,
   };
@@ -80,6 +82,29 @@ export function initializeApp(root: HTMLElement): void {
     showTimerScreen();
   }
 
+  function openSettings(): void {
+    const now = Date.now();
+    if (refreshTimer(now)) return;
+    pauseTimer(state.timer, now);
+    state.screen = "settings";
+    updateTimerView = null;
+    renderSettingsScreen(screen, state.timer.durations, saveDurations, cancelSettings);
+  }
+
+  function saveDurations(durations: DurationSettings): boolean {
+    if (!saveSettings(durations)) return false;
+    state.timer.durations = { ...durations };
+    resetTimer(state.timer);
+    showTimerScreen();
+    return true;
+  }
+
+  function cancelSettings(): void {
+    if (state.screen !== "settings") return;
+    showTimerScreen();
+    screen.querySelector<HTMLButtonElement>(".settings-button")?.focus();
+  }
+
   function showTimerScreen(): void {
     state.screen = "timer";
     state.completedMode = null;
@@ -87,6 +112,7 @@ export function initializeApp(root: HTMLElement): void {
       toggleTimer,
       resetTimer: resetCurrentTimer,
       skipTimer: skipCurrentTimer,
+      openSettings,
     });
     renderSessionHearts(screen, state.completedFocusSessions);
     refreshTimer();
@@ -99,6 +125,11 @@ export function initializeApp(root: HTMLElement): void {
   document.addEventListener("visibilitychange", () => refreshTimer());
   document.addEventListener("keydown", (event) => {
     if (event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (state.screen === "settings" && event.key === "Escape") {
+      event.preventDefault();
+      cancelSettings();
+      return;
+    }
     const target = event.target;
     if (target instanceof HTMLElement && target.closest("input, textarea, select, [contenteditable]")) return;
 
