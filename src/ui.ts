@@ -4,6 +4,7 @@ import heartUrl from "./assets/heart.svg";
 import settingsUrl from "./assets/settings.svg";
 import type { AppState, DurationSettings, TimerMode } from "./state";
 import { isValidDuration, MAX_DURATION_MS } from "./storage";
+import { startDesktopDrag } from "./desktop";
 
 const buttonLabels = { idle: "Start", running: "Pause", paused: "Resume" };
 
@@ -34,6 +35,7 @@ export function renderSessionHearts(screen: HTMLElement, count: number): void {
 export function createMacintoshShell(root: HTMLElement): HTMLElement {
   const macintosh = document.createElement("div");
   macintosh.className = "macintosh";
+  macintosh.addEventListener("mousedown", startDesktopDrag);
 
   const artwork = document.createElement("img");
   artwork.className = "macintosh-body";
@@ -109,10 +111,6 @@ export function renderTimerScreen(
   time.setAttribute("role", "timer");
   time.setAttribute("aria-live", "off");
 
-  const status = document.createElement("p");
-  status.className = "timer-status";
-  status.setAttribute("role", "status");
-
   const controls = document.createElement("div");
   controls.className = "timer-controls";
   const toggle = document.createElement("button");
@@ -138,7 +136,7 @@ export function renderTimerScreen(
   settings.append(settingsIcon);
   settings.addEventListener("click", actions.openSettings);
 
-  timerScreen.append(time, controls, status, settings);
+  timerScreen.append(time, controls, settings);
   screen.replaceChildren(timerScreen);
 
   return (state, remainingMs) => {
@@ -147,8 +145,6 @@ export function renderTimerScreen(
     const seconds = Math.ceil(remainingMs / 1000);
     time.textContent = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
     toggle.textContent = buttonLabels[state.timer.status];
-    const message = state.timer.status === "paused" ? "Paused" : "";
-    if (status.textContent !== message) status.textContent = message;
   };
 }
 
@@ -193,6 +189,12 @@ export function renderSettingsScreen(
   form.noValidate = true;
   const heading = document.createElement("h1");
   heading.textContent = "Settings";
+  const close = document.createElement("button");
+  close.className = "settings-close";
+  close.type = "button";
+  close.textContent = "×";
+  close.setAttribute("aria-label", "Close settings");
+  close.addEventListener("click", cancelSettings);
   const note = document.createElement("p");
   note.className = "settings-note";
   note.hidden = true;
@@ -211,7 +213,7 @@ export function renderSettingsScreen(
   cancel.textContent = "Cancel";
   cancel.addEventListener("click", cancelSettings);
   controls.append(save, cancel);
-  form.prepend(heading, note);
+  form.prepend(heading, close, note);
   form.append(controls);
 
   form.addEventListener("submit", (event) => {

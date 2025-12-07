@@ -27,6 +27,14 @@ body,
   margin: 0;
 }
 
+:root.desktop-app {
+  background: transparent;
+}
+
+.desktop-app #app {
+  padding: 0;
+}
+
 #app {
   display: grid;
   place-items: center;

@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "MiniMac Pomodoro",
+  "productName": "Pomintosh",
   "version": "0.1.0",
-  "identifier": "com.pomintosh.minimac",
+  "identifier": "com.pomintosh.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://127.0.0.1:1420",
@@ -10,23 +10,28 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "MiniMac Pomodoro",
-        "width": 560,
-        "height": 620,
-        "minWidth": 360,
-        "minHeight": 400,
-        "resizable": true
+        "label": "main",
+        "title": "Pomintosh",
+        "width": 300,
+        "height": 320,
+        "resizable": false,
+        "maximizable": false,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "center": true
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self'; style-src 'self'; font-src 'self'; script-src 'self'",
-      "devCsp": "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'; connect-src 'self' ws://127.0.0.1:1420"
+      "csp": "default-src 'self'; img-src 'self'; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'self' ipc: http://ipc.localhost",
+      "devCsp": "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'; connect-src 'self' ipc: http://ipc.localhost ws://127.0.0.1:1420"
     }
   },
   "bundle": {
     "active": false,
-    "icon": ["icons/icon.png"]
+    "icon": ["icons/icon.png", "icons/icon.icns", "icons/icon.ico"]
   }
 }

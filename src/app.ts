@@ -1,6 +1,7 @@
 import type { AppState, DurationSettings } from "./state";
 import { loadSettings, saveSettings } from "./storage";
-import { createCompletionSound } from "./audio";
+import { createAppSounds } from "./audio";
+import { initializeDesktop, syncDesktopTimer } from "./desktop";
 import {
   completeSession,
   createTimerState,
@@ -28,7 +29,7 @@ export function initializeApp(root: HTMLElement): void {
     completedFocusSessions: 0,
   };
   const screen = createMacintoshShell(root);
-  const completionSound = createCompletionSound();
+  const sounds = createAppSounds();
   let updateTimerView: ReturnType<typeof renderTimerScreen> | null = null;
 
   function refreshTimer(now = Date.now()): boolean {
@@ -41,7 +42,7 @@ export function initializeApp(root: HTMLElement): void {
       updateTimerView = null;
       renderFinishedScreen(screen, state.completedMode, acknowledgeCompletion);
       renderSessionHearts(screen, state.completedFocusSessions);
-      void completionSound.play();
+      void sounds.playCompletion();
       return true;
     }
     updateTimerView?.(state, getRemainingTime(state.timer, now));
@@ -51,15 +52,17 @@ export function initializeApp(root: HTMLElement): void {
   function toggleTimer(): void {
     const now = Date.now();
     if (refreshTimer(now)) return;
-    completionSound.unlock();
+    sounds.unlock();
     if (state.timer.status === "running") pauseTimer(state.timer, now);
     else startTimer(state.timer, now);
+    syncDesktopTimer(state.timer);
     refreshTimer();
   }
 
   function resetCurrentTimer(): void {
     if (refreshTimer()) return;
     resetTimer(state.timer);
+    syncDesktopTimer(state.timer);
     refreshTimer();
   }
 
@@ -67,14 +70,15 @@ export function initializeApp(root: HTMLElement): void {
     // An expired session already moves to the next mode during refresh.
     if (refreshTimer()) return;
     skipTimer(state.timer);
+    syncDesktopTimer(state.timer);
     refreshTimer();
   }
 
   function openTimer(): void {
     if (state.screen !== "boot") return;
 
-    completionSound.unlock();
-    void completionSound.playStartup();
+    sounds.unlock();
+    void sounds.playStartup();
     state.screen = "loading";
     const loadingDurationMs = 900;
     renderLoadingScreen(screen, loadingDurationMs);
@@ -93,6 +97,7 @@ export function initializeApp(root: HTMLElement): void {
     const now = Date.now();
     if (refreshTimer(now)) return;
     pauseTimer(state.timer, now);
+    syncDesktopTimer(state.timer);
     state.screen = "settings";
     updateTimerView = null;
     renderSettingsScreen(screen, state.timer.durations, saveDurations, cancelSettings);
@@ -102,6 +107,7 @@ export function initializeApp(root: HTMLElement): void {
     if (!saveSettings(durations)) return false;
     state.timer.durations = { ...durations };
     resetTimer(state.timer);
+    syncDesktopTimer(state.timer);
     showTimerScreen();
     return true;
   }
@@ -127,9 +133,12 @@ export function initializeApp(root: HTMLElement): void {
   }
 
   renderBootScreen(screen, openTimer);
+  initializeDesktop(() => refreshTimer());
+  syncDesktopTimer(state.timer);
 
   window.addEventListener("focus", () => refreshTimer());
   document.addEventListener("visibilitychange", () => refreshTimer());
+  window.addEventListener("pageshow", () => refreshTimer());
   document.addEventListener("keydown", (event) => {
     if (event.repeat || event.altKey || event.ctrlKey || event.metaKey) return;
     if (state.screen === "settings" && event.key === "Escape") {

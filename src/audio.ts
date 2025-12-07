@@ -1,9 +1,16 @@
 import chimeUrl from "./assets/sounds/timer-finished.wav";
 import startupUrl from "./assets/sounds/mac-startup.wav";
 
-export function createCompletionSound(): {
+function playBuffer(context: AudioContext, buffer: AudioBuffer): void {
+  const source = context.createBufferSource();
+  source.buffer = buffer;
+  source.connect(context.destination);
+  source.start();
+}
+
+export function createAppSounds(): {
   unlock: () => void;
-  play: () => Promise<void>;
+  playCompletion: () => Promise<void>;
   playStartup: () => Promise<void>;
 } {
   let context: AudioContext | null = null;
@@ -34,7 +41,7 @@ export function createCompletionSound(): {
     void audioContext.resume().catch((error: unknown) => console.warn("Could not enable audio:", error));
   }
 
-  async function play(): Promise<void> {
+  async function playCompletion(): Promise<void> {
     const audioContext = context;
     const audioBuffer = buffer;
     if (!audioContext || !audioBuffer) return;
@@ -43,10 +50,7 @@ export function createCompletionSound(): {
       const decodedBuffer = await audioBuffer;
       if (!decodedBuffer) return;
       await audioContext.resume();
-      const source = audioContext.createBufferSource();
-      source.buffer = decodedBuffer;
-      source.connect(audioContext.destination);
-      source.start();
+      playBuffer(audioContext, decodedBuffer);
     } catch (error) {
       console.warn("Could not play completion chime:", error);
     }
@@ -64,14 +68,11 @@ export function createCompletionSound(): {
           return response.arrayBuffer();
         })
         .then((data) => audioContext.decodeAudioData(data));
-      const source = audioContext.createBufferSource();
-      source.buffer = await startupBuffer;
-      source.connect(audioContext.destination);
-      source.start();
+      playBuffer(audioContext, await startupBuffer);
     } catch (error) {
       console.warn("Could not play startup chime:", error);
     }
   }
 
-  return { unlock, play, playStartup };
+  return { unlock, playCompletion, playStartup };
 }

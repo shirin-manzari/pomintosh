@@ -12,6 +12,7 @@
 }
 
 .settings-screen {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -24,7 +25,6 @@
 .settings-screen h1,
 .settings-note {
   margin: 0;
-  text-align: center;
   font-weight: 400;
   line-height: 1;
 }
@@ -34,8 +34,23 @@
   font-size: 7.5cqw;
   text-align: left;
 }
+
 .settings-note {
   font-size: 3.8cqw;
+  text-align: center;
+}
+
+.settings-close {
+  position: absolute;
+  top: 2.25cqw;
+  right: 4cqw;
+  display: grid;
+  place-items: center;
+  width: 6cqw;
+  height: 6cqw;
+  padding: 0;
+  font-size: 5.5cqw;
+  line-height: 1;
 }
 
 .duration-row {
@@ -60,6 +75,7 @@
 
 .duration-row input,
 .duration-row select,
+.settings-close,
 .settings-controls button,
 .timer-controls button {
   border: 1px solid var(--screen-fg);
@@ -72,6 +88,10 @@
 .duration-row select {
   width: 100%;
   font: inherit;
+}
+
+.duration-row select {
+  font-size: 3.8cqw;
 }
 
 .settings-controls {
@@ -96,8 +116,8 @@
   right: 3cqw;
   display: grid;
   place-items: center;
-  width: 5cqw;
-  height: 5cqw;
+  width: 7cqw;
+  height: 7cqw;
   padding: 0.5cqw;
   border: 0;
   background: transparent;
@@ -112,6 +132,11 @@
 .settings-screen :focus-visible {
   outline: 2px dashed var(--screen-fg);
   outline-offset: 0.3cqw;
+}
+
+.duration-row input:focus-visible,
+.duration-row select:focus-visible {
+  outline: 2px solid var(--screen-fg);
 }
 
 .boot-screen {
@@ -170,27 +195,11 @@
   padding: 3cqw;
 }
 
-.timer-screen p {
-  margin: 0;
-  font-weight: 400;
-}
-
 .timer-digits {
   font-size: 20cqw;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   transform: translateY(-2cqw);
-}
-
-.timer-status {
-  position: absolute;
-  bottom: 0;
-  left: 3cqw;
-  right: 3cqw;
-  font-size: 4cqw;
-  line-height: 1;
-  text-align: center;
-  min-height: 1em;
 }
 
 .timer-controls {
@@ -212,6 +221,7 @@
 }
 
 .timer-controls button:active,
+.settings-close:active,
 .settings-controls button:active {
   color: var(--screen-bg);
   background: var(--screen-fg);
@@ -219,6 +229,7 @@
 
 @media (hover: hover) {
   .timer-controls button:hover,
+  .settings-close:hover,
   .settings-controls button:hover {
     color: var(--screen-bg);
     background: var(--screen-fg);
