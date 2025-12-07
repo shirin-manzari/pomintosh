@@ -31,7 +31,13 @@
     }
   },
   "bundle": {
-    "active": false,
-    "icon": ["icons/icon.png", "icons/icon.icns", "icons/icon.ico"]
+    "active": true,
+    "targets": "all",
+    "shortDescription": "A tiny Macintosh-inspired Pomodoro timer",
+    "icon": ["icons/icon.png", "icons/icon.icns", "icons/icon.ico"],
+    "macOS": {
+      "minimumSystemVersion": "13.0",
+      "signingIdentity": "-"
+    }
   }
 }
