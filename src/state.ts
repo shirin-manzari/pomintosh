@@ -1,4 +1,4 @@
-export type AppScreen = "boot" | "timer";
+export type AppScreen = "boot" | "timer" | "finished";
 export type TimerMode = "focus" | "break";
 export type TimerStatus = "idle" | "running" | "paused";
 export type DurationSettings = Record<TimerMode, number>;
@@ -14,4 +14,5 @@ export interface TimerState {
 export interface AppState {
   screen: AppScreen;
   timer: TimerState;
+  completedMode: TimerMode | null;
 }

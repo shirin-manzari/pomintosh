@@ -1,6 +1,6 @@
 import macBodyUrl from "./assets/mac-body.png";
 import smileFaceUrl from "./assets/smile-face.svg";
-import type { AppState } from "./state";
+import type { AppState, TimerMode } from "./state";
 
 const buttonLabels = { idle: "Start", running: "Pause", paused: "Resume" };
 
@@ -92,4 +92,29 @@ export function renderTimerScreen(
     const message = state.timer.status === "paused" ? "Paused" : "";
     if (status.textContent !== message) status.textContent = message;
   };
+}
+
+export function renderFinishedScreen(
+  screen: HTMLElement,
+  completedMode: TimerMode,
+  acknowledgeCompletion: () => void,
+): void {
+  const finished = document.createElement("button");
+  finished.className = "finished-screen";
+  finished.type = "button";
+
+  const message = document.createElement("span");
+  message.className = "finished-message";
+  message.textContent =
+    completedMode === "focus" ? "Focus complete!" : "Break complete!";
+
+  const prompt = document.createElement("span");
+  prompt.className = "finished-prompt";
+  prompt.textContent =
+    completedMode === "focus" ? "Continue to break" : "Continue to focus";
+
+  finished.append(message, prompt);
+  finished.addEventListener("click", acknowledgeCompletion);
+  screen.replaceChildren(finished);
+  finished.focus();
 }

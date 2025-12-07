@@ -1,4 +1,5 @@
 import type { AppState } from "./state";
+import { createCompletionSound } from "./audio";
 import {
   completeSession,
   createTimerState,
@@ -11,6 +12,7 @@ import {
 import {
   createMacintoshShell,
   renderBootScreen,
+  renderFinishedScreen,
   renderTimerScreen,
 } from "./ui";
 
@@ -18,14 +20,21 @@ export function initializeApp(root: HTMLElement): void {
   const state: AppState = {
     screen: "boot",
     timer: createTimerState(),
+    completedMode: null,
   };
   const screen = createMacintoshShell(root);
+  const completionSound = createCompletionSound();
   let updateTimerView: ReturnType<typeof renderTimerScreen> | null = null;
 
   function refreshTimer(now = Date.now()): boolean {
     if (state.screen !== "timer") return false;
+    const mode = state.timer.mode;
     if (completeSession(state.timer, now)) {
-      updateTimerView?.(state, getRemainingTime(state.timer, now));
+      state.completedMode = mode;
+      state.screen = "finished";
+      updateTimerView = null;
+      renderFinishedScreen(screen, state.completedMode, acknowledgeCompletion);
+      void completionSound.play();
       return true;
     }
     updateTimerView?.(state, getRemainingTime(state.timer, now));
@@ -35,6 +44,7 @@ export function initializeApp(root: HTMLElement): void {
   function toggleTimer(): void {
     const now = Date.now();
     if (refreshTimer(now)) return;
+    completionSound.unlock();
     if (state.timer.status === "running") pauseTimer(state.timer, now);
     else startTimer(state.timer, now);
     refreshTimer();
@@ -56,12 +66,19 @@ export function initializeApp(root: HTMLElement): void {
   function openTimer(): void {
     if (state.screen !== "boot") return;
 
+    completionSound.unlock();
     showTimerScreen();
     window.setInterval(refreshTimer, 250);
   }
 
+  function acknowledgeCompletion(): void {
+    if (state.screen !== "finished") return;
+    showTimerScreen();
+  }
+
   function showTimerScreen(): void {
     state.screen = "timer";
+    state.completedMode = null;
     updateTimerView = renderTimerScreen(screen, {
       toggleTimer,
       resetTimer: resetCurrentTimer,
@@ -80,6 +97,12 @@ export function initializeApp(root: HTMLElement): void {
     const target = event.target;
     if (target instanceof HTMLElement && target.closest("input, textarea, select, [contenteditable]")) return;
 
+    if (state.screen === "finished" && (event.code === "Space" || event.code === "Enter")) {
+      if (target instanceof HTMLElement && target.closest("button")) return;
+      event.preventDefault();
+      acknowledgeCompletion();
+      return;
+    }
     if (state.screen !== "timer") return;
 
     // Buttons keep their native Space action, including Reset and Skip.

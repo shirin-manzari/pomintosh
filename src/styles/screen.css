@@ -1,5 +1,6 @@
 .boot-screen,
-.timer-screen {
+.timer-screen,
+.finished-screen {
   width: 100%;
   height: 100%;
   display: flex;
@@ -91,4 +92,25 @@
     background: var(--screen-fg);
   }
 
+}
+
+.finished-screen {
+  gap: 1.5cqw;
+  border: 0;
+  color: var(--screen-fg);
+  background: var(--screen-bg);
+}
+
+.finished-message {
+  font-size: 7cqw;
+  line-height: 1;
+}
+
+.finished-prompt {
+  font-size: 4.6cqw;
+}
+
+.finished-screen:focus-visible {
+  outline: 2px dashed var(--screen-fg);
+  outline-offset: -3cqw;
 }
