@@ -1,4 +1,5 @@
 .boot-screen,
+.loading-screen,
 .timer-screen,
 .finished-screen {
   width: 100%;
@@ -33,7 +34,6 @@
   font-size: 7.5cqw;
   text-align: left;
 }
-
 .settings-note {
   font-size: 3.8cqw;
 }
@@ -129,6 +129,42 @@
   height: 26cqw;
 }
 
+.loading-screen {
+  gap: 3cqw;
+}
+
+.loading-screen p {
+  margin: 0;
+  font-size: 6cqw;
+  line-height: 1;
+}
+
+.loading-bar {
+  width: 34cqw;
+  height: 3cqw;
+  padding: 0.4cqw;
+  border: 1px solid var(--screen-fg);
+}
+
+.loading-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--screen-fg);
+  transform-origin: left;
+  animation: startup-fill var(--loading-duration) steps(8, end) both;
+}
+
+@keyframes startup-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-fill {
+    animation: none;
+  }
+}
+
 .timer-screen {
   position: relative;
   padding: 3cqw;
@@ -181,20 +217,20 @@
   background: var(--screen-fg);
 }
 
-@media (hover: hover) {.timer-controls button:hover,
-.settings-controls button:hover {
+@media (hover: hover) {
+  .timer-controls button:hover,
+  .settings-controls button:hover {
     color: var(--screen-bg);
     background: var(--screen-fg);
   }
 
-.settings-button:hover {
+  .settings-button:hover {
     background: var(--screen-fg);
   }
 
-.settings-button:hover img {
+  .settings-button:hover img {
     filter: invert(1);
   }
-
 }
 
 .finished-screen {

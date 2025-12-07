@@ -74,6 +74,24 @@ export function renderBootScreen(
   screen.replaceChildren(bootButton);
 }
 
+export function renderLoadingScreen(screen: HTMLElement, durationMs: number): void {
+  const loading = document.createElement("div");
+  loading.className = "loading-screen";
+  loading.setAttribute("role", "status");
+  loading.style.setProperty("--loading-duration", `${durationMs}ms`);
+
+  const message = document.createElement("p");
+  message.textContent = "Starting up…";
+  const bar = document.createElement("div");
+  bar.className = "loading-bar";
+  bar.setAttribute("aria-hidden", "true");
+  const fill = document.createElement("div");
+  fill.className = "loading-fill";
+  bar.append(fill);
+  loading.append(message, bar);
+  screen.replaceChildren(loading);
+}
+
 export function renderTimerScreen(
   screen: HTMLElement,
   actions: {

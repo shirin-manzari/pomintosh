@@ -14,6 +14,7 @@ import {
   createMacintoshShell,
   renderBootScreen,
   renderFinishedScreen,
+  renderLoadingScreen,
   renderSessionHearts,
   renderSettingsScreen,
   renderTimerScreen,
@@ -73,8 +74,14 @@ export function initializeApp(root: HTMLElement): void {
     if (state.screen !== "boot") return;
 
     completionSound.unlock();
-    showTimerScreen();
-    window.setInterval(refreshTimer, 250);
+    void completionSound.playStartup();
+    state.screen = "loading";
+    const loadingDurationMs = 900;
+    renderLoadingScreen(screen, loadingDurationMs);
+    window.setTimeout(() => {
+      showTimerScreen();
+      window.setInterval(refreshTimer, 250);
+    }, loadingDurationMs);
   }
 
   function acknowledgeCompletion(): void {

@@ -1,11 +1,14 @@
 import chimeUrl from "./assets/sounds/timer-finished.wav";
+import startupUrl from "./assets/sounds/mac-startup.wav";
 
 export function createCompletionSound(): {
   unlock: () => void;
   play: () => Promise<void>;
+  playStartup: () => Promise<void>;
 } {
   let context: AudioContext | null = null;
   let buffer: Promise<AudioBuffer | null> | null = null;
+  let startupBuffer: Promise<AudioBuffer> | null = null;
 
   function unlock(): void {
     // Open the audio context during a user gesture for WebView autoplay rules.
@@ -49,5 +52,26 @@ export function createCompletionSound(): {
     }
   }
 
-  return { unlock, play };
+  async function playStartup(): Promise<void> {
+    const audioContext = context;
+    if (!audioContext) return;
+
+    try {
+      await audioContext.resume();
+      startupBuffer ??= fetch(startupUrl)
+        .then((response) => {
+          if (!response.ok) throw new Error("Could not load startup chime.");
+          return response.arrayBuffer();
+        })
+        .then((data) => audioContext.decodeAudioData(data));
+      const source = audioContext.createBufferSource();
+      source.buffer = await startupBuffer;
+      source.connect(audioContext.destination);
+      source.start();
+    } catch (error) {
+      console.warn("Could not play startup chime:", error);
+    }
+  }
+
+  return { unlock, play, playStartup };
 }
