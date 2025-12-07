@@ -5,7 +5,7 @@
   --screen-width: 50.205761%;
   --screen-height: 34.671815%;
   position: relative;
-  width: min(100%, calc((100dvh - 24px) * 1215 / 1295), 600px);
+  width: min(50%, calc((100dvh - 24px) * 1215 / 1295 / 2), 300px);
   aspect-ratio: 1215 / 1295;
   container-type: inline-size;
   user-select: none;
