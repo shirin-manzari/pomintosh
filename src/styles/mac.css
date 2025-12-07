@@ -1,0 +1,38 @@
+.macintosh {
+  /* Artwork coordinates: display x=303, y=260, w=610, h=449. */
+  --screen-left: 24.938272%;
+  --screen-top: 20.07722%;
+  --screen-width: 50.205761%;
+  --screen-height: 34.671815%;
+  position: relative;
+  width: min(100%, calc((100dvh - 24px) * 1215 / 1295), 600px);
+  aspect-ratio: 1215 / 1295;
+  container-type: inline-size;
+  user-select: none;
+}
+
+.macintosh-body {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.macintosh-screen {
+  position: absolute;
+  left: var(--screen-left);
+  top: var(--screen-top);
+  width: var(--screen-width);
+  height: var(--screen-height);
+  overflow: hidden;
+  color: var(--screen-fg);
+  background: var(--screen-bg);
+  /* Stepped corners follow the inner edge of the pixel-art bezel. */
+  clip-path: polygon(
+    4% 0, 96% 0, 96% 2%, 98% 2%, 98% 4%, 100% 4%,
+    100% 96%, 98% 96%, 98% 98%, 96% 98%, 96% 100%,
+    4% 100%, 4% 98%, 2% 98%, 2% 96%, 0 96%,
+    0 4%, 2% 4%, 2% 2%, 4% 2%
+  );
+}

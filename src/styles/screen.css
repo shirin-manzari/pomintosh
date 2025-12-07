@@ -1,0 +1,56 @@
+.boot-screen,
+.timer-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4cqw;
+}
+
+.boot-screen {
+  border: 0;
+  background: var(--screen-bg);
+}
+
+.boot-screen:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: -4cqw;
+}
+
+.smile-face {
+  width: 26cqw;
+  height: 26cqw;
+  image-rendering: pixelated;
+}
+
+.timer-screen {
+  gap: 1.5cqw;
+}
+
+.timer-screen h1,
+.timer-screen p {
+  margin: 0;
+  font-weight: 400;
+}
+
+.timer-screen h1 {
+  font-size: 5cqw;
+}
+
+.timer-screen h1:focus-visible {
+  outline: 2px dashed var(--screen-fg);
+  outline-offset: 1cqw;
+}
+
+.timer-digits {
+  font-size: 13cqw;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-status {
+  font-size: 3.5cqw;
+  text-align: center;
+}

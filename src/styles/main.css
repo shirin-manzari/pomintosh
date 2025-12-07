@@ -1,0 +1,41 @@
+@font-face {
+  font-family: "MiniMac Pixel";
+  src: url("../assets/fonts/VT323-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  font-family: "MiniMac Pixel", monospace;
+  color: #171917;
+  background: #d8d8ce;
+  font-synthesis: none;
+  --screen-bg: #e4e8d5;
+  --screen-fg: #171917;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+#app {
+  display: grid;
+  place-items: center;
+  padding: 12px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
