@@ -4,7 +4,7 @@ A tiny Pomodoro desktop widget for macOS, inspired by the 1984 Macintosh. Drag t
 
 ![Pomintosh boot, timer, and settings screens](docs/demo.png)
 
-- Focus: 25 minutes. Break: 5 minutes.
+- Focus: 25 minutes + Break: 5 minutes.
 - Start, pause, reset, skip, and custom durations.
 - Startup beep, completion chime, and a heart counter for finished focus sessions.
 
@@ -21,15 +21,13 @@ npm install
 npm run tauri dev
 ```
 
-Browser demo: `npm run dev`.
+Browser demo: `npm run dev`
 
 ## Install
 
-Download [Pomintosh for Mac](https://github.com/shirin-manzari/pomintosh/releases/download/v0.1.0/Pomintosh-0.1.0.dmg).
+Download [Pomintosh for Mac](https://github.com/shirin-manzari/pomintosh/releases/download/v0.1.0/Pomintosh-0.1.0.dmg). Open the DMG and drag Pomintosh into Applications. macOS may require **System Settings → Privacy & Security → Open Anyway** on first launch.
 
-Open the DMG and drag Pomintosh into Applications. This build is for Apple Silicon on macOS 13+. It is not notarized; macOS may require **System Settings → Privacy & Security → Open Anyway** on first launch. [Signing details](https://v2.tauri.app/distribute/sign/macos/).
-
-Build from source: `npm run tauri -- build`.
+Build from source: `npm run tauri -- build`
 
 ## License
 
